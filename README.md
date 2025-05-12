@@ -161,38 +161,39 @@ $135.00
 $150.00
 $15.00
 --------------------------
-Learnings & Key Takeaways
+```
+## Learnings & Key Takeaways
 This mini-project provided valuable hands-on experience in several key areas:
 
-Cloud AI Service Integration: Successfully integrated a Python application with a leading cloud AI service (GCP Cloud Vision API), demonstrating the ability to consume and utilize managed ML capabilities.
+**Cloud AI Service Integration:** Successfully integrated a Python application with a leading cloud AI service (GCP Cloud Vision API), demonstrating the ability to consume and utilize managed ML capabilities.
 
-GCP Environment & Authentication: Mastered the setup of the Google Cloud SDK (gcloud CLI) and the crucial Application Default Credentials (ADC) mechanism for secure local development and authentication against GCP services.
+**GCP Environment & Authentication:** Mastered the setup of the Google Cloud SDK (gcloud CLI) and the crucial Application Default Credentials (ADC) mechanism for secure local development and authentication against GCP services.
 
-Problem-Solving (Network & Proxy Configuration):
+## Problem-Solving (Network & Proxy Configuration):
 
-Challenge: Initially faced network connectivity errors (503 failed to connect, Connection timed out) when attempting to reach the Vision API.
+**Challenge:** Initially faced network connectivity errors (503 failed to connect, Connection timed out) when attempting to reach the Vision API.
 
-Diagnosis & Solution: Identified that the development environment's internet connection (via a phone hotspot) required a proxy server. Resolved this by correctly configuring the HTTPS_PROXY environment variable in the PowerShell session, enabling the Python client libraries to correctly route traffic through the proxy. This was a critical troubleshooting step highlighting the importance of understanding the network environment.
+**Diagnosis & Solution:** Identified that the development environment's internet connection (via a phone hotspot) required a proxy server. Resolved this by correctly configuring the HTTPS_PROXY environment variable in the PowerShell session, enabling the Python client libraries to correctly route traffic through the proxy. This was a critical troubleshooting step highlighting the importance of understanding the network environment.
 
-Practical OCR Application: Gained practical understanding of OCR technology, its application in extracting text from real-world documents (receipts), and observed how image quality can influence extraction accuracy.
+**Practical OCR Application:** Gained practical understanding of OCR technology, its application in extracting text from real-world documents (receipts), and observed how image quality can influence extraction accuracy.
 
-Python for Cloud Services: Utilized Python with the google-cloud-vision client library for API interaction, along with os and io modules for robust file handling.
+**Python for Cloud Services:** Utilized Python with the google-cloud-vision client library for API interaction, along with os and io modules for robust file handling.
 
-API Interaction Best Practices: Learned to handle API responses, including checking for errors and parsing successful results.
+**API Interaction Best Practices:** Learned to handle API responses, including checking for errors and parsing successful results.
 
-Version Control & Documentation: Employed Git and GitHub for version control and created comprehensive project documentation (README.md) suitable for a portfolio, emphasizing reproducibility and clarity.
+**Version Control & Documentation:** Employed Git and GitHub for version control and created comprehensive project documentation (README.md) suitable for a portfolio, emphasizing reproducibility and clarity.
 
-Foundation for Document Processing: This project builds a foundational understanding relevant to more complex document automation and data extraction pipelines commonly required in industries like FinTech and e-commerce.
+**Foundation for Document Processing:** This project builds a foundational understanding relevant to more complex document automation and data extraction pipelines commonly required in industries like FinTech and e-commerce.
 
-Future Considerations & Next Steps
+## Future Considerations & Next Steps
 PDF Text Extraction: While this project focused on images, a next step would be to implement more robust OCR for PDF documents. The initial attempt using the same direct byte-passing method with document_text_detection resulted in a "Bad image data" error for a specific PDF. Future work could involve:
 
 Testing with simpler, text-based PDFs to further diagnose the issue with the current approach.
 
 Exploring alternative Vision API methods more suited for PDFs, such as batch_annotate_files (which can take GCS URIs or inline content with explicit MIME types) or asynchronous processing for larger files.
 
-Web Interface: Develop a simple web interface (e.g., using Flask or Streamlit) to allow users to upload images and view extracted text directly in the browser.
+**Web Interface:** Develop a simple web interface (e.g., using Flask or Streamlit) to allow users to upload images and view extracted text directly in the browser.
 
-Enhanced Error Handling: Implement more granular error handling and logging within the Python script.
+**Enhanced Error Handling:** Implement more granular error handling and logging within the Python script.
 
-Structured Data Extraction: Move beyond full text extraction to identify and extract specific entities or fields from documents (e.g., total amount, date from a receipt) using regular expressions on the OCR output or exploring GCP's Document AI for more advanced, pre-built parsing capabilities.
+**Structured Data Extraction:** Move beyond full text extraction to identify and extract specific entities or fields from documents (e.g., total amount, date from a receipt) using regular expressions on the OCR output or exploring GCP's Document AI for more advanced, pre-built parsing capabilities.
