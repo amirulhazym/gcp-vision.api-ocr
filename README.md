@@ -1,50 +1,81 @@
-# GCP Vision API OCR: Text Extraction Mini-Project
+# GCP Vision API OCR: Interactive Text Extractor (Mini-Project)
 
-A Python-based tool leveraging Google Cloud Vision API to extract text from images, demonstrating practical application of cloud AI for document processing. This was undertaken as a one-day mini-project to gain practical experience with Google Cloud Platform's AI services and to develop foundational skills in automated data extraction.
+An interactive web application built with Python and Streamlit that leverages Google Cloud Vision API to perform Optical Character Recognition (OCR) and extract text from uploaded **image files**. This project demonstrates a user-friendly interface for a practical cloud AI service, initially developed as a one-day mini-project to gain experience with GCP and document processing.
+
+**(Optional: Add a GIF or Screenshot of your Streamlit App in action here!)**
+<!-- Example: ![OCR App Demo](docs/images/ocr_app_demo.gif) -->
 
 ## Table of Contents
-- [Objective](#objective)
+- [Overview](#overview)
+- [Features](#features)
 - [Technologies Used](#technologies-used)
 - [How It Works](#how-it-works)
+    - [Core OCR Logic (`ocr_tool.py`)](#core-ocr-logic-ocr_toolpy)
+    - [Streamlit Web Application (`app_ocr.py`)](#streamlit-web-application-app_ocrpy)
 - [Project Structure](#project-structure)
 - [Setup and Usage](#setup-and-usage)
-- [Sample Output (Image OCR)](#sample-output-image-ocr)
+    - [Prerequisites](#prerequisites)
+    - [Installation & Running the Web App](#installation--running-the-web-app)
+    - [Running the Command-Line Script (Optional)](#running-the-command-line-script-optional)
+- [Sample Output (from Web App)](#sample-output-from-web-app)
 - [Learnings & Key Takeaways](#learnings--key-takeaways)
 - [Future Considerations & Next Steps](#future-considerations--next-steps)
 
-## Objective
-The primary goals of this mini-project were:
-- To learn how to integrate Python applications with the GCP Cloud Vision API for OCR tasks.
-- To understand the process of sending image data to a cloud AI service and parsing the response.
-- To successfully extract text from various sample image files.
-- To gain hands-on experience with GCP authentication (Application Default Credentials) and environment setup.
-- To practice troubleshooting common issues like network/proxy configurations when working with cloud services.
-- To create a documented, version-controlled project suitable for a portfolio, building a foundational component relevant to automated document processing workflows often found in FinTech and e-commerce industries.
+## Overview
+This project provides two ways to interact with the GCP Vision API for OCR:
+1.  A **command-line script (`ocr_tool.py`)** for direct text extraction from local image files.
+2.  An **interactive Streamlit web application (`app_ocr.py`)** that allows users to upload an image, view it, extract text, and download the results as a `.txt` or line-by-line `.csv` file.
+
+The primary goal was to build a functional and demonstrable AI application, practice integrating with cloud services, troubleshoot common development hurdles, and create a portfolio-ready piece.
+
+## Features (Web Application - `app_ocr.py`)
+-   User-friendly interface for uploading image files (PNG, JPG, JPEG).
+-   Displays the uploaded image for review.
+-   "Extract Text" button to trigger OCR via GCP Vision API.
+-   Shows clear status messages (processing, success, errors).
+-   Displays the full extracted text in a scrollable text area.
+-   Buttons to download the extracted text as:
+    -   A plain `.txt` file (containing the full text block).
+    -   A `.csv` file (where each detected line of text is a separate row).
+-   Responsive layout suitable for web browsers.
 
 ## Technologies Used
-- **Cloud Provider:** Google Cloud Platform (GCP)
-- **Core Service:** GCP Cloud Vision API (`document_text_detection` method)
-- **Language:** Python 3.x
-- **Key Python Libraries:**
-    - `google-cloud-vision` (official Google Cloud client library)
-    - `os` (for operating system interactions, e.g., file paths)
-    - `io` (for handling in-memory binary streams)
-- **Development Environment:**
-    - Python Virtual Environment (`venv` or `gcp1env`)
-    - `pip` for package management (`requirements.txt`)
-- **Version Control:** Git & GitHub
-- **Local Terminal:** PowerShell (for execution and `gcloud` CLI)
+-   **Cloud Provider:** Google Cloud Platform (GCP)
+-   **Core AI Service:** GCP Cloud Vision API (`document_text_detection` method)
+-   **Web Framework:** Streamlit
+-   **Language:** Python 3.x
+-   **Key Python Libraries:**
+    -   `google-cloud-vision` (GCP Vision API client)
+    -   `streamlit` (for the web application)
+    -   `pandas` (for CSV data preparation)
+    -   `os` (for operating system interactions, e.g., file paths)
+    -   `io` (for handling in-memory binary streams)
+    -   `Pillow` (implicitly used by Streamlit for image handling)
+-   **Development Environment:**
+    -   Python Virtual Environment (`gcp1env` or `venv`)
+    -   `pip` for package management (`requirements.txt`)
+-   **Version Control:** Git & GitHub
+-   **Local Terminal:** PowerShell (for execution and `gcloud` CLI)
 
 ## How It Works
-The core logic resides in the `ocr_tool.py` script:
-1.  **Initialization:** Imports necessary libraries.
-2.  **Image Path Handling:** The `extract_text_from_image` function takes a relative path to an image file. It constructs an absolute path to ensure the file can be found regardless of where the script is invoked from.
-3.  **Client Instantiation:** An instance of `vision.ImageAnnotatorClient` is created. This client uses Application Default Credentials (ADC) for authentication with GCP.
-4.  **Image Loading:** The specified image file is opened in binary read mode (`'rb'`), and its content is read into memory. This binary content is then wrapped in a `vision.Image` object.
-5.  **API Request:** The `client.document_text_detection(image=...)` method is called, sending the image data to the Vision API.
-6.  **Response Handling:** The script robustly checks the API response for any errors before attempting to parse the text.
-    - If successful and text is found, `response.full_text_annotation.text` (which contains the concatenated extracted text) is returned.
-7.  **Main Execution:** The `if __name__ == "__main__":` block calls the `extract_text_from_image` function with predefined image paths and prints the results.
+
+### Core OCR Logic (`ocr_tool.py` & reused in `app_ocr.py`)
+1.  **Client Instantiation:** An instance of `vision.ImageAnnotatorClient` is created, using Application Default Credentials (ADC) for GCP authentication.
+2.  **Image Loading:** Image file bytes are read into memory.
+3.  **API Request:** `client.document_text_detection(image=vision.Image(content=...))` sends the image data to the Vision API.
+4.  **Response Handling:** Checks for API errors. If successful, `response.full_text_annotation.text` provides the extracted text.
+
+### Streamlit Web Application (`app_ocr.py`)
+1.  **Page Configuration:** Sets up the page title, icon, and layout using `st.set_page_config()`.
+2.  **Cached API Client:** The `vision.ImageAnnotatorClient` is cached using `@st.cache_resource` for efficiency, preventing re-initialization on every interaction.
+3.  **Session State:** `st.session_state` is used to store the uploaded file name and extracted text across Streamlit script reruns, ensuring data persistence during user interaction.
+4.  **File Uploader:** `st.file_uploader` allows users to select an image.
+5.  **Image Display & OCR Trigger:**
+    -   The uploaded image is displayed using `st.image`.
+    -   An "Extract Text" button (`st.button`) triggers the OCR process.
+    -   A spinner (`st.spinner`) provides visual feedback during API calls.
+6.  **Text Display:** The extracted text is shown in a `st.text_area`.
+7.  **Download Functionality:** `st.download_button` provides options to download the text as a `.txt` file or a line-by-line `.csv` file (prepared using `pandas`).
 
 ## Project Structure
 gcp-vision-ocr/
@@ -53,34 +84,34 @@ gcp-vision-ocr/
 ├── sample_images/ # Directory for sample images
 │ ├── receipt1.jpg
 │ └── receipt2.jpg
-│ └── your_other_image.png # Add your actual image files used for testing
+│ └── ... (your other test images)
 ├── .gitignore # Specifies intentionally untracked files for Git
-├── ocr_tool.py # The main Python script for OCR
+├── app_ocr.py # The Streamlit web application script
+├── ocr_tool.py # The command-line Python script for OCR
 ├── requirements.txt # Python package dependencies
 └── README.md # This file
 
 
 ## Setup and Usage
-To set up and run this project locally:
 
-1.  **Prerequisites:**
-    *   A Google Cloud Platform Account with an active project.
-    *   The **Cloud Vision API enabled** within your GCP project.
-    *   Google Cloud SDK (`gcloud` CLI) installed and configured on your local machine.
-    *   Authenticated with Application Default Credentials:
-        ```bash
-        gcloud auth application-default login
-        ```
-    *   Python 3.x installed.
-    *   Git installed.
-
-2.  **Clone the Repository (if you are viewing this on GitHub):**
+### Prerequisites
+*   A Google Cloud Platform Account with an active project.
+*   The **Cloud Vision API enabled** within your GCP project.
+*   Google Cloud SDK (`gcloud` CLI) installed and configured on your local machine.
+*   Authenticated with Application Default Credentials:
     ```bash
-    git clone https://github.com/YourUsername/gcp-vision-ocr-demo.git # Replace YourUsername/gcp-vision-ocr-demo with YOUR actual repository URL
-    cd gcp-vision-ocr-demo
+    gcloud auth application-default login
     ```
+*   Python 3.x installed.
+*   Git installed.
 
-3.  **Create and Activate a Python Virtual Environment:**
+### Installation & Running the Web App (`app_ocr.py`)
+1.  **Clone the Repository (if viewing on GitHub):**
+    ```bash
+    git clone https://github.com/amirulhazym/gcp-vision.api-ocr.git # Replace with YOUR actual repository URL
+    cd gcp-vision.api-ocr # Navigate into the cloned directory
+    ```
+2.  **Create and Activate a Python Virtual Environment:**
     ```bash
     # Navigate to the project root directory
     python -m venv gcp1env  # Or your preferred venv name
@@ -90,109 +121,81 @@ To set up and run this project locally:
     # macOS/Linux or Git Bash on Windows:
     # source gcp1env/bin/activate
     ```
-
-4.  **Install Dependencies:**
+3.  **Install Dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
-
-5.  **Proxy Configuration (If Required):**
-    If you are behind a proxy that your system requires for internet access (as was the case in my development environment using a specific phone hotspot setup), set the `HTTPS_PROXY` environment variable in your terminal session *before* running the Python script. The script itself does not contain proxy settings but respects this standard environment variable.
+4.  **Proxy Configuration (If Required by Your Network):**
+    If your internet connection requires a proxy, set the `HTTPS_PROXY` environment variable in your terminal session *before* running the Streamlit app.
     ```powershell
     # Example for PowerShell:
     $env:HTTPS_PROXY = "http://your_proxy_address.com:PROXY_PORT_NUMBER" # Replace with actual proxy details
     ```
+5.  **Run the Streamlit Web Application:**
+    Execute from the project root directory:
+    ```bash
+    streamlit run app_ocr.py
+    ```
+    Streamlit will typically open the application in your default web browser (usually at `http://localhost:8501`).
 
-6.  **Prepare Images:**
-    *   Ensure you have image files (e.g., `.jpg`, `.png`) in the `sample_images/` directory.
+### Running the Command-Line Script (Optional - `ocr_tool.py`)
+1.  Ensure steps 1-4 from the "Installation & Running the Web App" section are completed (cloning, venv, dependencies, proxy if needed).
+2.  Prepare images in the `sample_images/` directory.
+3.  Modify the image path variables at the bottom of `ocr_tool.py` to point to your desired images.
+4.  Execute from the project root directory:
+    ```bash
+    python ocr_tool.py
+    ```
 
-7.  **Run the Script:**
-    *   Modify the `relative_image_path_to_process` (and other image path variables if you're testing multiple) at the bottom of `ocr_tool.py` to point to the specific images you want to process within the `sample_images` folder.
-    *   Execute from the project root directory:
-        ```bash
-        python ocr_tool.py
-        ```
+## Sample Output (from Web App)
+After uploading `sample_images/receipt1.jpg` and clicking "Extract Text":
 
-## Sample Output (Image OCR)
-When processing `sample_images/receipt1.jpg`:
+*(Consider adding a good screenshot of your Streamlit app showing the uploaded image and the extracted text area with download buttons here. This is very impactful!)*
+<!-- Example: ![Streamlit App Screenshot](docs/images/streamlit_app_output.png) -->
 
-<!-- Optional: If you include receipt1.jpg in your repo, you can display it: 
-![Sample Receipt Input](sample_images/receipt1.jpg) 
--->
-
-The script produces the following output:
-
+The extracted text displayed (and available for download) would be similar to:
 ```text
---- GCP OCR Text Extractor ---
-Attempting to process image: sample_images/receipt1.jpg
-Image 'E:\AI Prep\Projects\mini\gcp-vision-ocr\sample_images/receipt1.jpg' loaded successfully.
-Sending request to Google Cloud Vision API for text detection...
-Text extraction successful!
-
------ Extracted Text -----
 LOREM IPSUM DOLOR SIT AMET
 *** RECEIPT ***
 CASHIER #3
-15/11/2019 - 04:45 PM
-ITEM 1
-$20.00
-ITEM 2
-$10.00
-DISC. 50% (SPECIAL PROMO) @ $20.00
-ITEM 3
-$50.00
-DISC. 50% (SELECTED ITEM) @ $100.00
-ITEM 4
-$30.00
-x2 @ $15.00
-ITEM 5
-$30.00
-x3 @ $10.00
-SUBTOTAL
-$140.00
-LOYALTY MEMBER
--5.00
-TOTAL AMOUNT
-CASH
-CHANGE
+... (rest of the receipt text) ...
 THANK YOU FOR SHOPPING!
-designed by freepik
 $135.00
 $150.00
 $15.00
---------------------------
-Learnings & Key Takeaways
+```
+
+## Learnings & Key Takeaways
 This mini-project provided valuable hands-on experience in several key areas:
 
-Cloud AI Service Integration: Successfully integrated a Python application with a leading cloud AI service (GCP Cloud Vision API), demonstrating the ability to consume and utilize managed ML capabilities.
+**Cloud AI Service Integration:** Successfully integrated a Python application with GCP Cloud Vision API.
 
-GCP Environment & Authentication: Mastered the setup of the Google Cloud SDK (gcloud CLI) and the crucial Application Default Credentials (ADC) mechanism for secure local development and authentication against GCP services.
+**Interactive Web Application Development:** Built a user-friendly web interface using Streamlit, enhancing the usability and demonstrability of the OCR tool. This included learning about Streamlit's layout options, widgets, session state management, and file download capabilities.
 
-Problem-Solving (Network & Proxy Configuration):
+**GCP Environment & Authentication:** Mastered the setup of gcloud CLI and Application Default Credentials (ADC).
 
-Challenge: Initially faced network connectivity errors (503 failed to connect, Connection timed out) when attempting to reach the Vision API.
+## Problem-Solving (Network & Proxy Configuration):
 
-Diagnosis & Solution: Identified that the development environment's internet connection (via a phone hotspot) required a proxy server. Resolved this by correctly configuring the HTTPS_PROXY environment variable in the PowerShell session, enabling the Python client libraries to correctly route traffic through the proxy. This was a critical troubleshooting step highlighting the importance of understanding the network environment.
+**Challenge:** Initially faced network connectivity errors.
 
-Practical OCR Application: Gained practical understanding of OCR technology, its application in extracting text from real-world documents (receipts), and observed how image quality can influence extraction accuracy.
+**Solution:** Diagnosed and resolved issues related to a proxy server required by the internet connection by setting the HTTPS_PROXY environment variable for both Python script execution and git operations. This was a critical real-world troubleshooting experience.
 
-Python for Cloud Services: Utilized Python with the google-cloud-vision client library for API interaction, along with os and io modules for robust file handling.
+Practical OCR Application: Gained practical understanding of OCR, observed how image quality influences extraction, and provided useful export options (TXT and line-by-line CSV).
 
-API Interaction Best Practices: Learned to handle API responses, including checking for errors and parsing successful results.
+**Python for Cloud & Web:** Utilized Python effectively with google-cloud-vision, streamlit, and pandas.
 
-Version Control & Documentation: Employed Git and GitHub for version control and created comprehensive project documentation (README.md) suitable for a portfolio, emphasizing reproducibility and clarity.
+**API Interaction & Error Handling:** Practiced handling API responses and providing user feedback.
 
-Foundation for Document Processing: This project builds a foundational understanding relevant to more complex document automation and data extraction pipelines commonly required in industries like FinTech and e-commerce.
+**Version Control & Documentation:** Employed Git/GitHub for version control and comprehensive project documentation.
 
-Future Considerations & Next Steps
-PDF Text Extraction: While this project focused on images, a next step would be to implement more robust OCR for PDF documents. The initial attempt using the same direct byte-passing method with document_text_detection resulted in a "Bad image data" error for a specific PDF. Future work could involve:
+**Foundation for Document Processing:** This project builds a solid foundation for more complex document automation tasks.
 
-Testing with simpler, text-based PDFs to further diagnose the issue with the current approach.
+## Future Considerations & Next Steps
+PDF Text Extraction: Implement more robust OCR for PDF documents, potentially using GCS uploads and batch_annotate_files for complex PDFs.
 
-Exploring alternative Vision API methods more suited for PDFs, such as batch_annotate_files (which can take GCS URIs or inline content with explicit MIME types) or asynchronous processing for larger files.
+**Advanced UI Features:** Add features like image rotation, contrast adjustment within the Streamlit app, or selection of specific OCR languages.
 
-Web Interface: Develop a simple web interface (e.g., using Flask or Streamlit) to allow users to upload images and view extracted text directly in the browser.
+**Structured Data Extraction:** Explore methods to extract specific fields (e.g., total, date, items) from receipts/invoices, possibly by integrating regex or looking into GCP's Document AI.
 
-Enhanced Error Handling: Implement more granular error handling and logging within the Python script.
+**Deployment of Streamlit App:** Deploy the Streamlit application to a cloud service (e.g., Streamlit Community Cloud, Google Cloud Run) for public accessibility.
 
-Structured Data Extraction: Move beyond full text extraction to identify and extract specific entities or fields from documents (e.g., total amount, date from a receipt) using regular expressions on the OCR output or exploring GCP's Document AI for more advanced, pre-built parsing capabilities.
