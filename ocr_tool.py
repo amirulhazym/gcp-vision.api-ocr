@@ -3,8 +3,7 @@ import io # for handling in-memory binary streams (our image file)
 import os # for interaction with os
 from google.cloud import vision # google cloud visiom lib
 
-def
-extract_text_from_image(image_path_from_script_location):
+def extract_text_from_image(image_path_from_script_location):
     """
     Detects and extracts text from a local image file using Google Cloud Vision API.
 
@@ -96,7 +95,7 @@ if __name__ == "__main__":
 # Try process OCR from PDF file
     print("\n--- Processing text from PDF ---")
     relative_image_path_3 = "sample_images/malaysia on china open source ai revolution.pdf" # receipt 2
-    extracted_text_result_3 = extract_text_from_image(relative_image_path_2)
+    extracted_text_result_3 = extract_text_from_image(relative_image_path_3)
     if extracted_text_result_3:
         print("\n----- Extracted Text (Image 3 - PDF 1) -----")
         print(extracted_text_result_3.strip())
