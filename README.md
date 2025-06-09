@@ -2,7 +2,7 @@
 
 An interactive web application built with Python and Streamlit that leverages Google Cloud Vision API to perform Optical Character Recognition (OCR) and extract text from uploaded **image files**. This project demonstrates a user-friendly interface for a practical cloud AI service, initially developed as a one-day mini-project to gain experience with GCP and document processing.
 
-**(Optional: Add a GIF or Screenshot of your Streamlit App in action here!)**
+**(Screenshot of Streamlit App in action will be upload here!)**
 <!-- Example: ![OCR App Demo](docs/images/ocr_app_demo.gif) -->
 
 ## Table of Contents
