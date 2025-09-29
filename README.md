@@ -11,8 +11,10 @@ This project is an interactive web application built with Python and Streamlit t
 
 The project includes both a command-line script for backend testing and a full-featured Streamlit web application for interactive use.
 
-**(You should insert a screenshot or GIF of the Streamlit application in action here!)**
-<!-- Example: ![OCR App Demo](docs/images/ocr_app_demo.gif) -->
+## **Streamlit UI**
+![Streamlit UI1](streamlit_ui/step1.png)
+![Streamlit UI2](streamlit_ui/step2.png)
+![Streamlit UI3](streamlit_ui/step3.png)
 
 ## 🔄 Project Workflows
 
@@ -25,7 +27,7 @@ This diagram illustrates the structured, step-by-step process followed to build 
 ```mermaid
 flowchart TD
     A(Start: Local Machine) --> B[Setup Environment <br> <i>venv, Git, .gitignore</i>];
-    B --> C[Install Dependencies <br> <i>requirements.txt</i>];
+    B --> C[Install Dependencies];
     C --> D[GCP Integration <br> <i>Enable Vision API, gcloud Auth</i>];
     D --> E[Develop Core Logic <br> <i>ocr_tool.py</i>];
     E --> F[Build Web Interface <br> <i>app_ocr.py</i>];
